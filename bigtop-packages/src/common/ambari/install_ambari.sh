@@ -100,110 +100,108 @@ CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf}
 VAR_LIB_DIR=/var/lib/ambari-server
 SBIN_DIR=/usr/sbin
 SERVER_DIR=$BUILD_DIR/ambari-server/target/ambari-server-*-dist/ambari-server*
-PREFIX_SERVER=${PREFIX}/ambari-server
 
-install -d -m 0755 $PREFIX_SERVER/$ETC_DIR
-install -d -m 0755 $PREFIX_SERVER/$SBIN_DIR
-install -d -m 0755 $PREFIX_SERVER/$VAR_LIB_DIR/data
-install -d -m 0755 $PREFIX_SERVER/$VAR_LIB_DIR/data/cache
-install -d -m 0755 $PREFIX_SERVER/$VAR_LIB_DIR/data/tmp
+install -d -m 0755 $PREFIX/$ETC_DIR
+install -d -m 0755 $PREFIX/$SBIN_DIR
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR/data
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR/data/cache
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR/data/tmp
 
-install -d -m 0755 $PREFIX_SERVER/var/run/ambari-server/bootstrap
-install -d -m 0755 $PREFIX_SERVER/var/run/ambari-server/stack-recommendations
-install -d -m 0755 $PREFIX_SERVER/var/log/ambari-server
-install -d -m 0755 $PREFIX_SERVER/$CONF_DIR
-
-
-copy_common $SOURCE_DIR ${PREFIX_SERVER}/${LIB_DIR}
+install -d -m 0755 $PREFIX/var/run/ambari-server/bootstrap
+install -d -m 0755 $PREFIX/var/run/ambari-server/stack-recommendations
+install -d -m 0755 $PREFIX/var/log/ambari-server
+install -d -m 0755 $PREFIX/$CONF_DIR
 
 
-install -d -m 0755 $PREFIX_SERVER/$LIB_DIR/web
-cp -ra  $SOURCE_DIR/ambari-web/public/* ${PREFIX_SERVER}/${LIB_DIR}/web
-
-cp -a $SOURCE_DIR/ambari-server/src/main/python/ambari-server.py ${PREFIX_SERVER}/${SBIN_DIR}
-cp -a $SOURCE_DIR/ambari-server/src/main/python/ambari_server_main.py ${PREFIX_SERVER}/${SBIN_DIR}
-cp -a $SOURCE_DIR/ambari-server/target/ambari-server ${PREFIX_SERVER}/${SBIN_DIR}
-
-chmod 0755 $PREFIX_SERVER/$SBIN_DIR/*
-
-cp -a  $SOURCE_DIR/ambari-common/src/main/unix/ambari-python-wrap ${PREFIX_SERVER}/${VAR_LIB_DIR}
-cp -a  $SOURCE_DIR/ambari-server/conf/unix/ambari-env.sh ${PREFIX_SERVER}/${VAR_LIB_DIR}
-cp -a  $SOURCE_DIR/ambari-server/conf/unix/ambari-sudo.sh ${PREFIX_SERVER}/${VAR_LIB_DIR}
-cp -a  $SOURCE_DIR/ambari-server/conf/unix/install-helper.sh ${PREFIX_SERVER}/${VAR_LIB_DIR}
-
-chmod 0755 ${PREFIX_SERVER}/${VAR_LIB_DIR}/*
-chmod 0700 ${PREFIX_SERVER}/${VAR_LIB_DIR}/*.sh
+copy_common $SOURCE_DIR ${PREFIX}/${LIB_DIR}
 
 
-install -d -m 0700 $PREFIX_SERVER/$VAR_LIB_DIR
+install -d -m 0755 $PREFIX/$LIB_DIR/web
+cp -ra  $SOURCE_DIR/ambari-web/public/* ${PREFIX}/${LIB_DIR}/web
 
-install -d -m 0755 $PREFIX_SERVER/$VAR_LIB_DIR/resources
-install -d -m 0755 $PREFIX_SERVER/$VAR_LIB_DIR/resources/apps
-install -d -m 0755 $PREFIX_SERVER/$VAR_LIB_DIR/resources/common-services
-install -d -m 0755 $PREFIX_SERVER/$VAR_LIB_DIR/resources/views
+cp -a $SOURCE_DIR/ambari-server/src/main/python/ambari-server.py ${PREFIX}/${SBIN_DIR}
+cp -a $SOURCE_DIR/ambari-server/src/main/python/ambari_server_main.py ${PREFIX}/${SBIN_DIR}
+cp -a $SOURCE_DIR/ambari-server/target/ambari-server ${PREFIX}/${SBIN_DIR}
 
-cp -a  $SOURCE_DIR/ambari-server/src/main/resources/slider_resources/README.txt ${PREFIX_SERVER}/${VAR_LIB_DIR}/resources
+chmod 0755 $PREFIX/$SBIN_DIR/*
 
-install -d -m 0755 $PREFIX_SERVER/$VAR_LIB_DIR/keys/db
+cp -a  $SOURCE_DIR/ambari-common/src/main/unix/ambari-python-wrap ${PREFIX}/${VAR_LIB_DIR}
+cp -a  $SOURCE_DIR/ambari-server/conf/unix/ambari-env.sh ${PREFIX}/${VAR_LIB_DIR}
+cp -a  $SOURCE_DIR/ambari-server/conf/unix/ambari-sudo.sh ${PREFIX}/${VAR_LIB_DIR}
+cp -a  $SOURCE_DIR/ambari-server/conf/unix/install-helper.sh ${PREFIX}/${VAR_LIB_DIR}
 
-cp -ar $SOURCE_DIR/ambari-server/src/main/resources/db ${PREFIX_SERVER}/${VAR_LIB_DIR}/keys
-cp -a  $SOURCE_DIR/ambari-server/conf/unix/ca.config ${PREFIX_SERVER}/${VAR_LIB_DIR}/keys
-
-chmod 700 ${PREFIX_SERVER}/${VAR_LIB_DIR}/keys/db/*
-
-
-cp -a  $SOURCE_DIR/ambari-server/target/classes/Ambari-*.sql ${PREFIX_SERVER}/${VAR_LIB_DIR}/resources
-cp -a  $SOURCE_DIR/ambari-server/src/main/resources/Ambari-*.sql ${PREFIX_SERVER}/${VAR_LIB_DIR}/resources
-cp -a  $SOURCE_DIR/ambari-server/target/DBConnectionVerification.jar ${PREFIX_SERVER}/${VAR_LIB_DIR}/resources
-cp -a  $SOURCE_DIR/ambari-server/src/main/resources/role_command_order.json ${PREFIX_SERVER}/${VAR_LIB_DIR}/resources
-cp -a  $SOURCE_DIR/ambari-server/target/version ${PREFIX_SERVER}/${VAR_LIB_DIR}/resources
-
-cp -a  $SOURCE_DIR/ambari-server/conf/unix/ambari.properties ${PREFIX_SERVER}/${CONF_DIR}
-cp -a  $SOURCE_DIR/ambari-server/conf/unix/log4j.properties ${PREFIX_SERVER}/${CONF_DIR}
-cp -a  $SOURCE_DIR/ambari-server/conf/unix/krb5JAASLogin.conf ${PREFIX_SERVER}/${CONF_DIR}
+chmod 0755 ${PREFIX}/${VAR_LIB_DIR}/*
+chmod 0700 ${PREFIX}/${VAR_LIB_DIR}/*.sh
 
 
+install -d -m 0700 $PREFIX/$VAR_LIB_DIR
+
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR/resources
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR/resources/apps
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR/resources/common-services
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR/resources/views
+
+cp -a  $SOURCE_DIR/ambari-server/src/main/resources/slider_resources/README.txt ${PREFIX}/${VAR_LIB_DIR}/resources
+
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR/keys/db
+
+cp -ar $SOURCE_DIR/ambari-server/src/main/resources/db ${PREFIX}/${VAR_LIB_DIR}/keys
+cp -a  $SOURCE_DIR/ambari-server/conf/unix/ca.config ${PREFIX}/${VAR_LIB_DIR}/keys
+
+chmod 700 ${PREFIX}/${VAR_LIB_DIR}/keys/db/*
 
 
-cp -ra $SERVER_DIR/lib/ambari-server/* ${PREFIX_SERVER}/${LIB_DIR}/
+cp -a  $SOURCE_DIR/ambari-server/target/classes/Ambari-*.sql ${PREFIX}/${VAR_LIB_DIR}/resources
+cp -a  $SOURCE_DIR/ambari-server/src/main/resources/Ambari-*.sql ${PREFIX}/${VAR_LIB_DIR}/resources
+cp -a  $SOURCE_DIR/ambari-server/target/DBConnectionVerification.jar ${PREFIX}/${VAR_LIB_DIR}/resources
+cp -a  $SOURCE_DIR/ambari-server/src/main/resources/role_command_order.json ${PREFIX}/${VAR_LIB_DIR}/resources
+cp -a  $SOURCE_DIR/ambari-server/target/version ${PREFIX}/${VAR_LIB_DIR}/resources
+
+cp -a  $SOURCE_DIR/ambari-server/conf/unix/ambari.properties ${PREFIX}/${CONF_DIR}
+cp -a  $SOURCE_DIR/ambari-server/conf/unix/log4j.properties ${PREFIX}/${CONF_DIR}
+cp -a  $SOURCE_DIR/ambari-server/conf/unix/krb5JAASLogin.conf ${PREFIX}/${CONF_DIR}
 
 
 
 
-cp -a  $SOURCE_DIR/ambari-server/src/main/resources/slider_resources/README.txt ${PREFIX_SERVER}/var/lib/ambari-server/resources/apps
-cp -ar $SOURCE_DIR/ambari-server/target/classes/common-services   ${PREFIX_SERVER}/var/lib/ambari-server/resources/
-cp -ar $SOURCE_DIR/ambari-server/src/main/resources/custom_action_definitions   ${PREFIX_SERVER}/var/lib/ambari-server/resources/
-cp -ar $SOURCE_DIR/ambari-server/src/main/resources/custom_actions ${PREFIX_SERVER}/var/lib/ambari-server/resources/
-cp -ar $SOURCE_DIR/ambari-server/src/main/resources/host_scripts ${PREFIX_SERVER}/var/lib/ambari-server/resources/
+cp -ra $SERVER_DIR/lib/ambari-server/* ${PREFIX}/${LIB_DIR}/
 
-chmod 0755 ${PREFIX_SERVER}/var/lib/ambari-server/resources/custom_actions/scripts/*
-chmod 0755 ${PREFIX_SERVER}/var/lib/ambari-server/resources/host_scripts/*
 
-cp -ar $SOURCE_DIR/ambari-server/src/main/resources/scripts ${PREFIX_SERVER}/var/lib/ambari-server/resources/
-cp -ar $SOURCE_DIR/ambari-server/src/main/python/upgradeHelper.py ${PREFIX_SERVER}/var/lib/ambari-server/resources/scripts
 
-chmod 0755 ${PREFIX_SERVER}/var/lib/ambari-server/resources/scripts/*
 
-cp -ar $SOURCE_DIR/ambari-server/src/main/resources/stacks ${PREFIX_SERVER}/var/lib/ambari-server/resources/
+cp -a  $SOURCE_DIR/ambari-server/src/main/resources/slider_resources/README.txt ${PREFIX}/var/lib/ambari-server/resources/apps
+cp -ar $SOURCE_DIR/ambari-server/target/classes/common-services   ${PREFIX}/var/lib/ambari-server/resources/
+cp -ar $SOURCE_DIR/ambari-server/src/main/resources/custom_action_definitions   ${PREFIX}/var/lib/ambari-server/resources/
+cp -ar $SOURCE_DIR/ambari-server/src/main/resources/custom_actions ${PREFIX}/var/lib/ambari-server/resources/
+cp -ar $SOURCE_DIR/ambari-server/src/main/resources/host_scripts ${PREFIX}/var/lib/ambari-server/resources/
 
-chmod 0755 ${PREFIX_SERVER}/var/lib/ambari-server/resources/stacks/stack_advisor.py
+chmod 0755 ${PREFIX}/var/lib/ambari-server/resources/custom_actions/scripts/*
+chmod 0755 ${PREFIX}/var/lib/ambari-server/resources/host_scripts/*
 
-cp -ar $SOURCE_DIR/ambari-server/src/main/resources/upgrade ${PREFIX_SERVER}/var/lib/ambari-server/resources/
+cp -ar $SOURCE_DIR/ambari-server/src/main/resources/scripts ${PREFIX}/var/lib/ambari-server/resources/
+cp -ar $SOURCE_DIR/ambari-server/src/main/python/upgradeHelper.py ${PREFIX}/var/lib/ambari-server/resources/scripts
 
-install -d -m 0755 $PREFIX_SERVER/usr/lib/python2.6/site-packages/
+chmod 0755 ${PREFIX}/var/lib/ambari-server/resources/scripts/*
 
-cp -ar $SOURCE_DIR/ambari-server/src/main/python/ambari_server ${PREFIX_SERVER}/usr/lib/python2.6/site-packages/
-cp -ar $SOURCE_DIR/ambari-server/src/main/python/bootstrap.py ${PREFIX_SERVER}/usr/lib/python2.6/site-packages/ambari_server
-cp -ar $SOURCE_DIR/ambari-server/src/main/python/setupAgent.py ${PREFIX_SERVER}/usr/lib/python2.6/site-packages/ambari_server
-cp -ar $SOURCE_DIR/ambari-server/src/main/python/os_check_type.py ${PREFIX_SERVER}/usr/lib/python2.6/site-packages/ambari_server
+cp -ar $SOURCE_DIR/ambari-server/src/main/resources/stacks ${PREFIX}/var/lib/ambari-server/resources/
 
-chmod  0755 ${PREFIX_SERVER}/usr/lib/python2.6/site-packages/ambari_server/*
+chmod 0755 ${PREFIX}/var/lib/ambari-server/resources/stacks/stack_advisor.py
 
-cp -a  $SOURCE_DIR/ambari-admin/target/*.jar ${PREFIX_SERVER}/var/lib/ambari-server/resources/views
+cp -ar $SOURCE_DIR/ambari-server/src/main/resources/upgrade ${PREFIX}/var/lib/ambari-server/resources/
+
+install -d -m 0755 $PREFIX/usr/lib/python2.6/site-packages/
+
+cp -ar $SOURCE_DIR/ambari-server/src/main/python/ambari_server ${PREFIX}/usr/lib/python2.6/site-packages/
+cp -ar $SOURCE_DIR/ambari-server/src/main/python/bootstrap.py ${PREFIX}/usr/lib/python2.6/site-packages/ambari_server
+cp -ar $SOURCE_DIR/ambari-server/src/main/python/setupAgent.py ${PREFIX}/usr/lib/python2.6/site-packages/ambari_server
+cp -ar $SOURCE_DIR/ambari-server/src/main/python/os_check_type.py ${PREFIX}/usr/lib/python2.6/site-packages/ambari_server
+
+chmod  0755 ${PREFIX}/usr/lib/python2.6/site-packages/ambari_server/*
+
+cp -a  $SOURCE_DIR/ambari-admin/target/*.jar ${PREFIX}/var/lib/ambari-server/resources/views
 
 # End of Ambari Server
 
-PREFIX_AGENT=${PREFIX}/ambari-agent
 LIB_DIR=/usr/lib/ambari-agent
 ETC_DIR=/etc/ambari-agent
 VAR_LIB_DIR=/var/lib/ambari-agent
@@ -213,44 +211,50 @@ AGENT_BUILD_DIR=${BUILD_DIR}/ambari-agent/target
 AGENT_DIR=${AGENT_BUILD_DIR}/ambari-agent-*/ambari_agent
 AGENT_DEST_DIR=/usr/lib/python2.6/site-packages/ambari_agent
 
-copy_common $SOURCE_DIR ${PREFIX_AGENT}/${LIB_DIR}
+copy_common $SOURCE_DIR ${PREFIX}/${LIB_DIR}
 
-cp -ra $SOURCE_DIR/ambari-agent/src/examples ${PREFIX_AGENT}/${LIB_DIR}/lib
+cp -ra $SOURCE_DIR/ambari-agent/src/examples ${PREFIX}/${LIB_DIR}/lib
 
-install -d -m 0755 $PREFIX_AGENT/$AGENT_DEST_DIR
-cp -ra $AGENT_DIR/* ${PREFIX_AGENT}/${AGENT_DEST_DIR}
-chmod -R 0755 ${PREFIX_AGENT}/${AGENT_DEST_DIR}
+install -d -m 0755 $PREFIX/$AGENT_DEST_DIR
+cp -ra $AGENT_DIR/* ${PREFIX}/${AGENT_DEST_DIR}
+chmod -R 0755 ${PREFIX}/${AGENT_DEST_DIR}
 
-install -d -m 0755 $PREFIX_AGENT/$CONF_DIR
-cp -a $SOURCE_DIR/ambari-agent/conf/unix/ambari-agent.ini ${PREFIX_AGENT}/$CONF_DIR
-cp -a $SOURCE_DIR/ambari-agent/conf/unix/logging.conf.sample ${PREFIX_AGENT}/$CONF_DIR
+install -d -m 0755 $PREFIX/$CONF_DIR
+cp -a $SOURCE_DIR/ambari-agent/conf/unix/ambari-agent.ini ${PREFIX}/$CONF_DIR
+cp -a $SOURCE_DIR/ambari-agent/conf/unix/logging.conf.sample ${PREFIX}/$CONF_DIR
 
-install -d -m 0755 $PREFIX_AGENT/$SBIN_DIR
-cp -ra $AGENT_BUILD_DIR/src/ambari-agent ${PREFIX_AGENT}/${SBIN_DIR}
-chmod 0755 ${PREFIX_AGENT}/${SBIN_DIR}/ambari-agent
+install -d -m 0755 $PREFIX/$SBIN_DIR
+cp -ra $AGENT_BUILD_DIR/src/ambari-agent ${PREFIX}/${SBIN_DIR}
+chmod 0755 ${PREFIX}/${SBIN_DIR}/ambari-agent
 
-install -d -m 0755 $PREFIX_AGENT/$VAR_LIB_DIR
-cp -a $SOURCE_DIR/ambari-agent/conf/unix/ambari-env.sh ${PREFIX_AGENT}/${VAR_LIB_DIR}
-cp -a $SOURCE_DIR/ambari-agent/conf/unix/install-helper.sh ${PREFIX_AGENT}/${VAR_LIB_DIR}
-cp -a $SOURCE_DIR/ambari-agent/conf/unix/upgrade_agent_configs.py ${PREFIX_AGENT}/${VAR_LIB_DIR}
-cp -a $SOURCE_DIR/ambari-agent/conf/unix/ambari-sudo.sh ${PREFIX_AGENT}/${VAR_LIB_DIR}
-cp -a $SOURCE_DIR/ambari-common/src/main/unix/ambari-python-wrap ${PREFIX_AGENT}/${VAR_LIB_DIR}
-chmod 700 ${PREFIX_AGENT}/${VAR_LIB_DIR}/*
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR
+cp -a $SOURCE_DIR/ambari-agent/conf/unix/ambari-env.sh ${PREFIX}/${VAR_LIB_DIR}
+cp -a $SOURCE_DIR/ambari-agent/conf/unix/install-helper.sh ${PREFIX}/${VAR_LIB_DIR}
+cp -a $SOURCE_DIR/ambari-agent/conf/unix/upgrade_agent_configs.py ${PREFIX}/${VAR_LIB_DIR}
+cp -a $SOURCE_DIR/ambari-agent/conf/unix/ambari-sudo.sh ${PREFIX}/${VAR_LIB_DIR}
+cp -a $SOURCE_DIR/ambari-common/src/main/unix/ambari-python-wrap ${PREFIX}/${VAR_LIB_DIR}
+chmod 700 ${PREFIX}/${VAR_LIB_DIR}/*
 
-cp -ra $AGENT_BUILD_DIR/cache ${PREFIX_AGENT}/$VAR_LIB_DIR
-cp -ra $AGENT_BUILD_DIR/cache/custom_actions ${PREFIX_AGENT}/${VAR_LIB_DIR}/cache
+cp -ra $AGENT_BUILD_DIR/cache ${PREFIX}/$VAR_LIB_DIR
+cp -ra $AGENT_BUILD_DIR/cache/custom_actions ${PREFIX}/${VAR_LIB_DIR}/cache
 
-install -d -m 0755 ${PREFIX_AGENT}/${VAR_LIB_DIR}/data
+install -d -m 0755 ${PREFIX}/${VAR_LIB_DIR}/data
 
-cp -a $AGENT_BUILD_DIR/src/version ${PREFIX_AGENT}/${VAR_LIB_DIR}/data
+cp -a $AGENT_BUILD_DIR/src/version ${PREFIX}/${VAR_LIB_DIR}/data
 
-install -d -m 0755 ${PREFIX_AGENT}/etc/init.d
-cp -a $SOURCE_DIR/ambari-agent/etc/init.d/ambari-agent ${PREFIX_AGENT}/etc/init.d
-chmod 0755 ${PREFIX_AGENT}/etc/init.d/ambari-agent
+install -d -m 0755 ${PREFIX}/etc/init.d
+cp -a $SOURCE_DIR/ambari-agent/etc/init.d/ambari-agent ${PREFIX}/etc/init.d
+chmod 0755 ${PREFIX}/etc/init.d/ambari-agent
 
 
-install -d -m 0755 ${PREFIX_AGENT}/var/log
-install -d -m 0755 ${PREFIX_AGENT}/var/run
+install -d -m 0755 ${PREFIX}/var/log
+install -d -m 0755 ${PREFIX}/var/run
+install -d -m 0755 ${PREFIX}/var/run/ambari-agent
+install -d -m 0755 ${PREFIX}/var/lib/ambari-agent/tmp
+install -d -m 0755 ${PREFIX}/var/lib/ambari-agent/keys
+install -d -m 0755 ${PREFIX}/var/log/ambari-agent
+install -d -m 0755 ${PREFIX}/etc/rc.d/init.d
+
 
 #Ambari Groovy Client 
 
@@ -264,7 +268,6 @@ cp -a ${CLIENT_BUILD_DIR}/target/groovy-client*.jar ${PREFIX_GROOVY_CLIENT}/${OP
 
 #Ambari Python Client
 
-PREFIX_PYTHON_CLIENT=${PREFIX}/python-client
 LIB_DIR=/usr/lib
 CLIENT_BUILD_DIR=${SOURCE_DIR}/ambari-client/python-client
 

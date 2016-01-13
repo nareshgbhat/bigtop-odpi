@@ -38,4 +38,4 @@ override_dh_auto_install: $(svcs)
 	bash -x debian/install_ambari.sh \
 	--build-dir=`pwd` \
 	--source-dir=`pwd` \
-	--prefix=debian
+	--prefix=debian/tmp
