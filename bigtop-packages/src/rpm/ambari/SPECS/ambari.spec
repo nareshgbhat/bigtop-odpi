@@ -354,6 +354,10 @@ Ambari Agent
  /usr/lib/ambari-server/ambari-server-2.2.0.0.0.jar
  /usr/lib/ambari-server/lib/ambari_commons
  /usr/lib/ambari-server/lib/resource_management
+ /usr/lib/ambari-server/commons-io-2.1.jar
+ /usr/lib/ambari-server/jackson-mapper-asl-1.9.13.jar
+ /usr/lib/ambari-server/jdk.tools-1.7.jar
+ /var/lib/ambari-server/resources/README.txt
 %attr(755,root,root) /usr/lib/ambari-server/lib/ambari_jinja2
 %attr(755,root,root) /usr/lib/ambari-server/lib/ambari_simplejson
 %attr(755,root,root) /usr/sbin/ambari-server.py
