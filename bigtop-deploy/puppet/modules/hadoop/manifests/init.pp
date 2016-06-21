@@ -61,11 +61,9 @@ class hadoop ($hadoop_security_authentication = "simple",
       include hadoop::historyserver
       include hadoop::proxyserver
 
-      Class['Hadoop::Init_hdfs'] -> Class['Hadoop::Resourcemanager']
       if ("nodemanager" in $roles) {
         Class['Hadoop::Resourcemanager'] -> Class['Hadoop::Nodemanager']
       }
-      Class['Hadoop::Init_hdfs'] -> Class['Hadoop::Historyserver']
     }
 
     if ($hadoop::common_hdfs::ha == "disabled" and "secondarynamenode" in $roles) {
@@ -140,6 +138,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_rm_webapp_port = "8088",
       $hadoop_rt_port = "8025",
       $hadoop_sc_port = "8030",
+      $yarn_log_server_url = undef,
       $yarn_nodemanager_resource_memory_mb = undef,
       $yarn_scheduler_maximum_allocation_mb = undef,
       $yarn_scheduler_minimum_allocation_mb = undef,
@@ -827,6 +826,7 @@ class hadoop ($hadoop_security_authentication = "simple",
 
 
   class nodemanager {
+    include common_mapred_app
     include common_yarn
 
     package { "hadoop-yarn-nodemanager":
@@ -868,6 +868,7 @@ class hadoop ($hadoop_security_authentication = "simple",
 
   class client {
       include common_mapred_app
+      include common_yarn
 
       $hadoop_client_packages = $operatingsystem ? {
         /(OracleLinux|CentOS|RedHat|Fedora)/  => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs", "hadoop-debuginfo" ],

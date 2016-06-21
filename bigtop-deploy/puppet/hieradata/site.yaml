@@ -12,7 +12,10 @@ hadoop::hadoop_storage_dirs:
   - /data/4
 
 #hadoop_cluster_node::cluster_components:
+#  - alluxio
+#  - apex
 #  - crunch
+#  - flink
 #  - flume
 #  - giraph
 #  - ignite_hadoop
@@ -25,11 +28,11 @@ hadoop::hadoop_storage_dirs:
 #  - mapred-app
 #  - oozie
 #  - pig
+#  - qfs
 #  - solrcloud
 #  - spark
 #  - sqoop
 #  - sqoop2
-#  - tachyon
 #  - tez
 #  - yarn
 #  - zookeeper

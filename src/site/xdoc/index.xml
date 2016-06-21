@@ -53,7 +53,7 @@
 			<br />
 
 			<subsection name="Download latest release of Bigtop"></subsection>
-			<p><a href="http://www.apache.org/dist/bigtop/bigtop-1.1.0/">Bigtop-1.1.0</a> </p>
+			<p><a href="download.html#releases">Bigtop-1.1.0</a> </p>
 
 			<subsection name="All required tools will be installed by ./gradlew toolchain"></subsection>
 			<p>However place supply a suitable JRE (for instance openjdk7) first</p>
@@ -64,11 +64,11 @@
 				Apache Bigtop uses Jenkins for continuous integration testing (you can learn more about Jenkins
 				<a href="http://jenkins-ci.org/">here</a>
 				).
-				There are 2 Jenkins servers currently running for the project:
+				There is a Jenkins server currently running for the project:
 			</p>
 			<ul>
 				<li>
-					<a href="https://ci.bigtop.apache.org/">http://ci.bigtop.apache.org/</a>
+					<a href="https://ci.bigtop.apache.org/">https://ci.bigtop.apache.org/</a>
 				</li>
 			</ul>
 			<p>

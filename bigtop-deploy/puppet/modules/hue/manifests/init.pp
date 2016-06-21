@@ -29,6 +29,13 @@ class hue {
   class server($sqoop2_url = "http://localhost:12000/sqoop", $solr_url = "http://localhost:8983/solr/", $hbase_thrift_url = "",
                $webhdfs_url, $rm_host, $rm_port, $oozie_url, $rm_proxy_url, $history_server_url,
                $hive_host = "", $hive_port = "10000",
+		$zookeeper_host_port = "localhost:2181",
+               $force_username_lowercase = "false",
+               $group_filter_value = "objectclass=groupOfEntries",
+               $nt_domain = undef,
+               $use_ldap_username_pattern = false,
+               $ldap_username_pattern = undef,
+               $remote_deployement_dir = "/user/hue/oozie/deployments",
                $rm_logical_name = undef, $rm_api_port = "8088", $app_blacklist = "impala, security",
                $hue_host = "0.0.0.0", $hue_port = "8888", $hue_timezone = "America/Los_Angeles",
                $default_fs = "hdfs://localhost:8020",
@@ -38,7 +45,7 @@ class hue {
                $base_dn = undef , $bind_dn = undef, $bind_password = undef,
                $user_name_attr = undef, $user_filter = undef,
                $group_member_attr = undef, $group_filter = undef,
-               $hue_apps = "all" ) {
+               $hue_apps = "all", $default_hdfs_superuser = "hdfs" ) {
 
     $hue_packages = $hue_apps ? {
       "all"     => [ "hue", "hue-server" ], # The hue metapackage requires all apps

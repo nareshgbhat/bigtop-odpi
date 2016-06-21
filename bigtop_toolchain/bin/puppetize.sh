@@ -39,6 +39,7 @@ case ${ID}-${VERSION_ID} in
 	yum -y install hostname curl sudo unzip wget puppet
 	;;
     ubuntu-14.04)
+	apt-get update
 	apt-get -y install wget
 	if [ $HOSTTYPE = "x86_64" ] ; then
 	  # BIGTOP-2003. A workaround to install newer hiera to get rid of hiera 1.3.0 bug.
@@ -48,7 +49,7 @@ case ${ID}-${VERSION_ID} in
         fi
 	apt-get -y install curl sudo unzip puppet software-properties-common
 	;;
-    ubuntu-15*)
+    ubuntu-1[56]*)
 	apt-get update
 	apt-get -y install curl sudo unzip wget puppet software-properties-common
 	;;
@@ -56,7 +57,7 @@ case ${ID}-${VERSION_ID} in
 	apt-get update
 	apt-get -y install curl sudo unzip wget puppet
 	;;
-    opensuse-13.2)
+    opensuse-*)
 	zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
 	;;
     centos-6*)

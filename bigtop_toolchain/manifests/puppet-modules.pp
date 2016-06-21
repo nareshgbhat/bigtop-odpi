@@ -18,7 +18,6 @@ class bigtop_toolchain::puppet-modules {
   exec { 'install-puppet-stdlib':
     path    => '/usr/bin:/bin',
     command => 'puppet module install puppetlabs-stdlib',
-    onlyif => "test `facter puppetversion |cut -d'.' -f 1` -ge 3",
     creates => '/etc/puppet/modules/stdlib',
   }
 
@@ -27,9 +26,13 @@ class bigtop_toolchain::puppet-modules {
       exec { 'install-puppet-apt':
         path    => '/usr/bin:/bin',
         command => 'puppet module install puppetlabs-apt',
-        onlyif => "test `facter puppetversion |cut -d'.' -f 1` -ge 3",
         creates => '/etc/puppet/modules/apt',
       }
     }
   }
+
+  stage { 'first':
+    before => Stage['main'],
+  }
+  class { 'bigtop_toolchain::puppet-modules-prereq': stage => 'first' }
 }

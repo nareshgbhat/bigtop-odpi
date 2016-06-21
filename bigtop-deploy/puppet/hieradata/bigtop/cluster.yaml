@@ -16,8 +16,8 @@
 # "$components" list. If $components isn't set then everything in the stack will
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
-# hadoop,yarn,hbase,tachyon,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
-# hue,mahout,giraph,crunch,pig,hive,zookeeper, ycsb
+# hadoop,yarn,hbase,alluxio,flink,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
+# hue,mahout,giraph,crunch,pig,hive,zookeeper,ycsb,qfs
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
 #hadoop_cluster_node::cluster_components:
@@ -53,6 +53,13 @@
 #  - /data/4
 
 #bigtop::bigtop_repo_uri: "http://mirror.example.com/path/to/mirror/"
+
+# Use a pre-installed java environment. The default value of 'false' will cause
+# the configured 'bigtop::jdk_package_name' package to be installed. Setting
+# this to 'true' will ignore the configured 'bigtop::jdk_package_name' but
+# requires a compatible java environment be avaialble prior to Bigtop
+# installation.
+#bigtop::jdk_preinstalled: false
 
 # Test-only variable controls if user hdfs' sshkeys should be installed to allow
 # for passwordless login across the cluster. Required by some integration tests
@@ -98,6 +105,10 @@ hadoop::common_yarn::hadoop_rm_port: "8032"
 
 hadoop::common_mapred_app::jobtracker_host: "%{hiera('bigtop::hadoop_head_node')}"
 hadoop::common_mapred_app::mapreduce_jobhistory_host: "%{hiera('bigtop::hadoop_head_node')}"
+# actually default but needed for hadoop::common_yarn::yarn_log_server_url here
+bigtop::hadoop_history_server_port: "19888"
+bigtop::hadoop_history_server_url: "http://%{hiera('hadoop::common_mapred_app::mapreduce_jobhistory_host')}:%{hiera('bigtop::hadoop_history_server_port')}"
+hadoop::common_yarn::yarn_log_server_url: "%{hiera('bigtop::hadoop_history_server_url')}/jobhistory/logs"
 
 # actually default but needed for hue::server::webhdfs_url here
 hadoop::httpfs::hadoop_httpfs_port: "14000"
@@ -125,7 +136,14 @@ hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
-tachyon::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
+alluxio::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
+
+# qfs
+qfs::common::metaserver_host: "%{hiera('bigtop::hadoop_head_node')}"
+qfs::common::metaserver_port: "30000"
+qfs::common::chunkserver_port: "30000"
+qfs::common::metaserver_client_port: "20000"
+qfs::common::chunkserver_client_port: "22000"
 
 hadoop_zookeeper::server::myid: "0"
 hadoop_zookeeper::server::ensemble:
@@ -135,7 +153,6 @@ hadoop_zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 # those are only here because they were present as extlookup keys previously
 bigtop::hadoop_rm_http_port: "8088"
 bigtop::hadoop_rm_proxy_port: "8088"
-bigtop::hadoop_history_server_port: "19888"
 bigtop::sqoop2_server_port: "12000"
 bigtop::hbase_thrift_port: "9090"
 bigtop::hadoop_oozie_port: "11000"
@@ -143,8 +160,8 @@ bigtop::hadoop_oozie_port: "11000"
 hue::server::rm_host: "%{hiera('hadoop::common_yarn::hadoop_rm_host')}"
 hue::server::rm_port: "%{hiera('hadoop::common_yarn::hadoop_rm_port')}"
 hue::server::rm_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_rm_http_port')}"
-hue::server::rm_proxy_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_rm_proxy_port')}"
-hue::server::history_server_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_history_server_port')}"
+hue::server::rm_proxy_url: "http://%{hiera('hadoop::common_yarn::hadoop_ps_host')}:%{hiera('hadoop::common_yarn::hadoop_ps_port')}"
+hue::server::history_server_url: "%{hiera('bigtop::hadoop_history_server_url')}"
 # those use fqdn instead of hadoop_head_node because it's only ever activated
 # on the gatewaynode
 hue::server::webhdfs_url: "http://%{fqdn}:%{hiera('hadoop::httpfs::hadoop_httpfs_port')}/webhdfs/v1"
@@ -174,3 +191,10 @@ zeppelin::server::spark_master_url: "yarn-client"
 zeppelin::server::hiveserver2_url: "jdbc:hive2://%{hiera('hadoop-hive::common::hiveserver2_host')}:%{hiera('hadoop-hive::common::hiveserver2_port')}"
 zeppelin::server::hiveserver2_user: "%{hiera('bigtop::hiveserver2_user')}"
 zeppelin::server::hiveserver2_password: "%{hiera('bigtop::hiveserver2_password')}"
+
+# Flink
+flink::common::jobmanager_host: "%{hiera('bigtop::hadoop_head_node')}"
+flink::common::jobmanager_port: "6123"
+
+flink::common::ui_port: "8081"
+flink::common::storage_dirs: "%{hiera('hadoop::hadoop_storage_dirs')}"

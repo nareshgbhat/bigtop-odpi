@@ -1,7 +1,9 @@
+alluxio: jay vyas, huamin chen
 apex: chinmay <chinmay@apache.org>, aniruddha <aniruddha@apache.org>
 bigpetstore: jay vyas, rj nowling
 CI infra: rvs
 data generators: rj nowling, jay vyas
+flink: rmetzger, mbalassi
 flume: bmahe
 gradle / build system: cos, rvs
 ignite-hadoop: cos, Sergey Vladykin <sergi.vladykin@gmail.com>
@@ -17,10 +19,10 @@ oozie evans ye, rvs
 phoenix: andrew purtell, youngwoo kim
 pig: evans ye, daniel dai
 puppet recipes: jay vyas, cos, evans ye, rvs
+qfs: kstinson <kstinson@quantcast.com>
 smoke-tests: jay vyas, david capwell
 spark: jay vyas, youngwoo kim
 sqoop: sean mackrory, youngwoo kim
-tachyon: jay vyas, huamin chen
 tajo: yeongeon kim
 test-artifacts and test-execution repos:
 tez: evans ye, oflebbe

@@ -39,9 +39,9 @@
   <inceptionYear>2011</inceptionYear>
 
   <properties>
-    <hadoop.version>2.6.0</hadoop.version>
+    <hadoop.version>2.7.2</hadoop.version>
     <!--An awful hack for BIGTOP-1429-->
-    <hbase.version>0.98.17-hadoop2</hbase.version>
+    <hbase.version>1.1.3</hbase.version>
     <pig.version>0.12.1</pig.version>
     <pig-smoke.version>0.12.1</pig-smoke.version>
     <sqoop.version>1.4.5</sqoop.version>
@@ -51,13 +51,13 @@
     <solr.version>4.6.0</solr.version>
     <spark.version>1.3.1</spark.version>
     <kafka.version>0.8.1.1</kafka.version>
-    <phoenix.version>4.3.1</phoenix.version>
+    <phoenix.version>4.7.0</phoenix.version>
     <kite.version>1.1.0</kite.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>
 
     <itest-common.version>${project.version}</itest-common.version>
 
-    <groovy.version>2.1.8</groovy.version>
+    <groovy.version>2.4.3</groovy.version>
     <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
     <groovy-eclipse-compiler.version>2.8.0-01</groovy-eclipse-compiler.version>
     <gmaven.version>1.0</gmaven.version>
@@ -299,7 +299,7 @@
               <exclude>**/.gitignore</exclude>
               <!-- Test data with rigid structure and/or binary -->
               <exclude>bigtop-tests/test-artifacts/**/resources/**</exclude>
-              <exclude>bigtop-tests/smoke-tests/tachyon/datafile</exclude>
+              <exclude>bigtop-tests/smoke-tests/alluxio/datafile</exclude>
               <exclude>bigtop-tests/smoke-tests/hive/passwd.ql</exclude>
               <exclude>bigtop-tests/smoke-tests/kite/sandwiches.csv</exclude>
               <exclude>bigtop-tests/smoke-tests/phoenix/*.csv</exclude>
@@ -337,6 +337,11 @@
               <exclude>bigtop-packages/src/common/*/*.json</exclude>
               <exclude>bigtop-packages/src/common/**/*.default</exclude>
               <exclude>bigtop-repos/apt/distributions</exclude>
+              <!-- Juju charm files with rigid structure -->
+              <exclude>bigtop-packages/src/charm/**/wheelhouse.txt</exclude>
+              <exclude>bigtop-packages/src/charm/**/*.yaml</exclude>
+              <exclude>bigtop-deploy/juju/**/*.yaml</exclude>
+              <exclude>bigtop-tests/cloud-weather-report/**/*.yaml</exclude>
               <!-- Miscelaneous individual files -->
               <exclude>src/site/resources/bigtop.rdf</exclude>
               <exclude>src/site/resources/images/bigtop-logo.ai</exclude>
@@ -388,61 +393,6 @@
     </pluginManagement>
     <plugins>
       <!--Build the documentation. We build it twice. Once as a single page and then again as multipage. -->
-      <plugin>
-        <groupId>com.agilejava.docbkx</groupId>
-        <artifactId>docbkx-maven-plugin</artifactId>
-        <version>2.0.14</version>
-        <inherited>false</inherited>
-        <dependencies>
-          <dependency>
-            <groupId>org.docbook</groupId>
-            <artifactId>docbook-xml</artifactId>
-            <version>4.4</version>
-            <scope>runtime</scope>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <sourceDirectory>${basedir}/src/site/docbookx/</sourceDirectory>
-          <targetDirectory>${basedir}/target/site/book/</targetDirectory>
-          <htmlCustomization>${basedir}/src/site/docbookx/customization.xsl
-          </htmlCustomization>
-          <chunkerOutputEncoding>UTF-8</chunkerOutputEncoding>
-          <sectionAutolabelMaxDepth>100</sectionAutolabelMaxDepth>
-          <sectionAutolabel>true</sectionAutolabel>
-          <sectionLabelIncludesComponentLabel>true
-          </sectionLabelIncludesComponentLabel>
-          <tocMaxDepth>2</tocMaxDepth>
-          <insertXrefPageNumber>yes</insertXrefPageNumber>
-          <xincludeSupported>true</xincludeSupported>
-          <useIdAsFilename>true</useIdAsFilename>
-        </configuration>
-        <executions>
-          <execution>
-            <id>multipage</id>
-            <goals>
-              <goal>generate-html</goal>
-            </goals>
-            <phase>pre-site</phase>
-            <configuration>
-              <navigShowtitles>true</navigShowtitles>
-              <chunkedOutput>true</chunkedOutput>
-              <imgSrcPath>../../images/</imgSrcPath>
-              <htmlStylesheet>../../css/freebsd_docbook.css</htmlStylesheet>
-            </configuration>
-          </execution>
-          <execution>
-            <id>doc</id>
-            <goals>
-              <goal>generate-pdf</goal>
-            </goals>
-            <phase>pre-site</phase>
-            <configuration>
-              <showXslMessages>true</showXslMessages>
-              <imgSrcPath>${basedir}/src/site/resources/images/</imgSrcPath>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>

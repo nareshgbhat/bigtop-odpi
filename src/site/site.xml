@@ -61,13 +61,12 @@
       <item name="Powered by" href="https://cwiki.apache.org/confluence/display/BIGTOP/Powered+By+Bigtop" />
       <item name="Who We Are" href="team-list.html" />
       <item name="Feedback" href="issue-tracking.html" />
-      <item name="User Guide" href="book/apache-bigtop-user-guide/apache-bigtop-user-guide.html" />
     </menu>
 
     <menu name="Releases">
       <item name="Release Notes" href="release-notes.html"/>
-      <item name="0.3.0-incubating" href="http://archive.apache.org/dist/incubator/bigtop/bigtop-0.3.0-incubating/"/>
       <item name="1.0.0" href="http://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.0.0/"/>
+      <item name="1.1.0" href="http://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.1.0/"/>
     </menu>
 
     <menu name="Project Information">
@@ -78,6 +77,11 @@
       <item name="Blog" href="http://blogs.apache.org/bigtop/" />
       <item name="Mailing Lists" href="mail-lists.html" />
       <item name="IRC channel" href="irc-channel.html" />
+    </menu>
+
+    <menu name="Downloads">
+      <item name="Latest release" href="download.html#releases"/>
+      <item name="Snapshots" href="download.html#snapshots"/>
     </menu>
 
     <menu name="ASF">
