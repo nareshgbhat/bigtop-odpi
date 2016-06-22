@@ -243,6 +243,7 @@ install -d -m 0755 ${SYSTEM_LIB_DIR}
 install -d -m 0755 ${HADOOP_NATIVE_LIB_DIR}
 for library in libhdfs.so.0.0.0; do
   cp ${BUILD_DIR}/lib/native/${library} ${SYSTEM_LIB_DIR}/
+  chrpath -d ${SYSTEM_LIB_DIR}/${library}
   ldconfig -vlN ${SYSTEM_LIB_DIR}/${library}
   ln -s ${library} ${SYSTEM_LIB_DIR}/${library/.so.*/}.so
 done
