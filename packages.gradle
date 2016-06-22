@@ -69,7 +69,10 @@ def touchTargetFile = { fileName ->
 def ifExists = { url ->
   if (url == null) return
   URLConnection uCon = new URL(url).openConnection()
-  return (uCon as HttpURLConnection).responseCode == 200
+  //return (uCon as HttpURLConnection).responseCode == 200
+  def retval = (uCon as HttpURLConnection).responseCode == 200
+  uCon.disconnect()
+  return retval
 }
 def safeDelete = { fileName ->
   exec {
@@ -298,9 +301,15 @@ def genTasks = { target ->
 // than in an array of args
     def command = """debuild \
 --preserve-envvar PATH \
+--preserve-envvar JAVA32_HOME \
+--preserve-envvar JAVA64_HOME \
+--preserve-envvar FORREST_HOME \
 --preserve-envvar MAVEN3_HOME \
 --preserve-envvar MAVEN_OPTS \
 --preserve-envvar JAVA_HOME \
+--preserve-envvar SCALA_HOME \
+--preserve-envvar ANT_OPTS \
+--preserve-envvar MAVEN_OPTS \
 --set-envvar=HADOOP_VERSION=$HADOOP_VERSION \
 --set-envvar=${toOldStyleName(target)}_BASE_VERSION=$BASE_VERSION \
 --set-envvar=${toOldStyleName(target)}_VERSION=$PKG_VERSION \
