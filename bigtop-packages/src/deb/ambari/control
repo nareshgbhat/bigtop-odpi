@@ -13,20 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-docker:
-        memory_size: "4096"
-        image: "bigtop/deploy:centos-6"
+Source: ambari
+Section: misc
+Priority: extra
+Maintainer: Bigtop <dev@bigtop.apache.org>
+Build-Depends: debhelper (>= 6)
+Standards-Version: 3.8.0
+Homepage: http://ambari.apache.org/
 
-boot2docker:
-        memory_size: "4096"
-        number_cpus: "1"
+Package: ambari-server
+Architecture: all
+Depends: openssl, postgresql (>= 8.1), python (>= 2.6), curl
+Description: 
 
-repo: "http://build.odpi.org:8080/job/ODPi-v1.0-collect/lastSuccessfulBuild/artifact/1.0/centos-6"
-distro: centos
-components: [hadoop, yarn]
-namenode_ui_port: "50070"
-yarn_ui_port: "8088"
-hbase_ui_port: "60010"
-enable_local_repo: false
-smoke_test_components: [mapreduce,hdfs]
-jdk: "java-1.7.0-openjdk-devel.x86_64"
+Package: ambari-agent
+Architecture: all
+Depends: openssl, postgresql (>= 8.1), python (>= 2.6), curl
+Description: 
+

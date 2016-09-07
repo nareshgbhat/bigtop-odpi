@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -11,22 +12,24 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limitations under the License.
+# limitations under the License
 
-docker:
-        memory_size: "4096"
-        image: "bigtop/deploy:centos-6"
+# WARNING: This script is performed not only on uninstall, but also
+# during package update. See http://www.ibm.com/developerworks/library/l-rpm2/
+# for details
 
-boot2docker:
-        memory_size: "4096"
-        number_cpus: "1"
+if [ "$1" == "remove" ]; then # Action is uninstall
+    /usr/sbin/ambari-agent stop > /dev/null 2>&1
+    if [ -d "/etc/ambari-agent/conf.save" ];  then
+        mv /etc/ambari-agent/conf.save /etc/ambari-agent/conf_$(date '+%d_%m_%y_%H_%M').save
+    fi
+    mv /etc/ambari-agent/conf /etc/ambari-agent/conf.save
 
-repo: "http://build.odpi.org:8080/job/ODPi-v1.0-collect/lastSuccessfulBuild/artifact/1.0/centos-6"
-distro: centos
-components: [hadoop, yarn]
-namenode_ui_port: "50070"
-yarn_ui_port: "8088"
-hbase_ui_port: "60010"
-enable_local_repo: false
-smoke_test_components: [mapreduce,hdfs]
-jdk: "java-1.7.0-openjdk-devel.x86_64"
+    if [ -f "/var/lib/ambari-agent/install-helper.sh" ]; then
+      /var/lib/ambari-agent/install-helper.sh remove
+    fi
+
+    update-rc.d -f ambari-agent remove
+fi
+
+exit 0

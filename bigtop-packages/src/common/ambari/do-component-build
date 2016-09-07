@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,20 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-docker:
-        memory_size: "4096"
-        image: "bigtop/deploy:centos-6"
+set -ex
+. `dirname $0`/bigtop.bom
 
-boot2docker:
-        memory_size: "4096"
-        number_cpus: "1"
-
-repo: "http://build.odpi.org:8080/job/ODPi-v1.0-collect/lastSuccessfulBuild/artifact/1.0/centos-6"
-distro: centos
-components: [hadoop, yarn]
-namenode_ui_port: "50070"
-yarn_ui_port: "8088"
-hbase_ui_port: "60010"
-enable_local_repo: false
-smoke_test_components: [mapreduce,hdfs]
-jdk: "java-1.7.0-openjdk-devel.x86_64"
+export _JAVA_OPTIONS="-Xmx2048m -XX:MaxPermSize=512m -Djava.awt.headless=true"
+mvn clean package -DskipTests -Drat.skip
