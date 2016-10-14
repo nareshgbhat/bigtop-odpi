@@ -63,7 +63,7 @@ puts "vagrant conf local repo enabled:  #{enable_local_repo}"
 jdk = CONF['jdk']
 
 # master node hostname
-bigtop_master = "bigtop1.vagrant"
+bigtop_master = "odpi1.vagrant"
 
 $script = <<SCRIPT
 service iptables stop
@@ -89,6 +89,8 @@ hadoop_cluster_node::cluster_components: #{components}
 bigtop::jdk_package_name: #{jdk}
 hadoop::common_hdfs::testonly_hdfs_sshkeys: "yes"
 EOF
+# ODPI-130 - Upgrade to latest CentOS 6.x to ensure Java works as expected
+yum -y upgrade
 SCRIPT
 
 VAGRANTFILE_API_VERSION = "2"
@@ -104,10 +106,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # nodes definition
   (1..num_instances).each do |i|
-    config.vm.define "bigtop#{i}" do |bigtop|
+    config.vm.define "odpi#{i}" do |bigtop|
 
       bigtop.vm.box = CONF['box']
-      bigtop_hostname="bigtop#{i}"
+      bigtop_hostname="odpi#{i}"
       bigtop_fqdn="#{bigtop_hostname}.vagrant"
       bigtop_ip="10.10.10.1#{i}"
 

@@ -177,7 +177,7 @@ task "all-components" (description: "List the components of the stack") << {
 }
 
 def genTasks = { target ->
-  Task t = task "${target}-download" (dependsOn: "${target}_vardefines",
+  Task t = task "${target}-download" (dependsOn: ["odpi-nexus","${target}_vardefines"],
       description: "Download $target artifacts",
       group: PACKAGES_GROUP) << {
 
@@ -410,7 +410,7 @@ def genTasks = { target ->
   }
 
   // Keeping the reference to task to be used later for correct sequencing
-  Task trpm = task "$target-rpm" (dependsOn: ["${target}-srpm"],
+  Task trpm = task "$target-rpm" (dependsOn: "${target}-srpm",
       description: "Building RPM for $target artifacts",
       group: PACKAGES_GROUP) << {
     if (new File(config.bigtop.components[target].targetrpm)?.exists()) {
@@ -682,6 +682,20 @@ project.afterEvaluate {
       group: PACKAGES_GROUP) << {
     delete (DL_DIR)
   }
+}
+
+task "odpi-nexus"(description: 'Creates a maven settings.xml file in the user home .m2 directory.',
+   group: PACKAGES_GROUP) << {
+   println 'Creating a maven settings.xml file in the user home .m2 directory.'
+   def m2Dir = System.getProperty("user.home") + "/.m2"
+   mkdir(m2Dir)
+   def writer = new File(m2Dir + "/settings.xml")
+   def writeMirrorLine = { name ->
+     writer.append("<mirror><name>$name</name><url>http://nexus.odpi.org:8081/nexus/content/groups/public</url><mirrorOf>$name</mirrorOf></mirror>")
+   }
+   writer.text = "<settings><mirrors>"
+   writeMirrorLine( "central")
+   writer.append("</mirrors></settings>")
 }
 
 task "apt" (

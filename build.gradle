@@ -80,6 +80,7 @@ rat {
        "bigtop-tests/smoke-tests/phoenix/*.sql",
        "bigtop-tests/smoke-tests/ignite-hadoop/*.data",
        "bigtop-tests/smoke-tests/tajo/table1/*.csv",
+       "bigtop-tests/spec-tests/runtime/src/test/resources/*",
        "**/target/**",
        "**/build/**",
        "**/.gradle/**",
@@ -421,6 +422,7 @@ task "bigtop-slaves"(type:Exec,
 
 project.afterEvaluate {
   checkClusterTestProjects("smoke.tests")
+  checkClusterTestProjects("spec.tests")
   artifactToInstall(dependsOn: [installTopLevel, installCommon, installConf, installiTest])
 }
 
