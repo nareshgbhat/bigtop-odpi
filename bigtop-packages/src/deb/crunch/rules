@@ -59,4 +59,4 @@ override_dh_auto_install:
 	ln -fs ${hbase_home}/hbase-hadoop2-compat.jar debian/tmp/${lib_crunch}/lib/
 	ln -fs ${hbase_home}/hbase-prefix-tree.jar debian/tmp/${lib_crunch}/lib/
 	ln -fs ${hbase_home}/hbase-procedure.jar debian/tmp/${lib_crunch}/lib/
-	ln -fs 4{hbase_home}/hbase-server.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hbase_home}/hbase-server.jar debian/tmp/${lib_crunch}/lib/
