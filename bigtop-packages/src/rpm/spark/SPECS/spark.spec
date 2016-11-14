@@ -126,20 +126,20 @@ Group: Development/Libraries
 %description -n spark-datanucleus
 DataNucleus libraries used by Spark SQL with Hive Support
 
-%package -n spark-extras
-Summary: External/extra libraries for Apache Spark
+%package -n spark-external
+Summary: External libraries for Apache Spark
 Group: Development/Libraries
 
-%description -n spark-extras
-External/extra libraries built for Apache Spark but not included in the main
+%description -n spark-external
+Summary: External libraries for Apache Spark but not included in the main
 assembly JAR (e.g., external streaming libraries)
 
-%package -n spark-yarn-shuffle
-Summary: Spark YARN Shuffle Service
+%package -n spark-network-shuffle
+Summary: Spark Network Shuffle Service
 Group: Development/Libraries
 
-%description -n spark-yarn-shuffle
-Spark YARN Shuffle Service
+%description -n spark-network-shuffle
+Spark Network Shuffle Service
 
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
@@ -151,7 +151,7 @@ bash $RPM_SOURCE_DIR/do-component-build
 %__rm -rf $RPM_BUILD_ROOT
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
-bash $RPM_SOURCE_DIR/install_spark.sh \
+bash -xv $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
@@ -194,25 +194,28 @@ done
 %{lib_spark}/conf
 %{lib_spark}/LICENSE
 %{lib_spark}/RELEASE
+%{lib_spark}/README
 %{lib_spark}/NOTICE
 %{lib_spark}/bin
 %{lib_spark}/lib
-%exclude %{lib_spark}/lib/datanucleus-*.jar
-%exclude %{lib_spark}/lib/spark-*-yarn-shuffle.jar
+%{lib_spark}/spark*.jar
+%{lib_spark}/jars
+%exclude %{lib_spark}/jars/datanucleus-*.jar
+%exclude %{lib_spark}/spark-network-shuffle*.jar
 %{lib_spark}/sbin
 %{lib_spark}/data
 %{lib_spark}/examples
 %{lib_spark}/work
+%{lib_spark}/ui-resources
+%{bin_spark}
 %exclude %{bin_spark}/pyspark
 %exclude %{lib_spark}/python
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
 %attr(0755,spark,spark) %{var_log_spark}
-%{bin}/spark-class
-%{bin}/spark-shell
-%{bin}/spark-sql
-%{bin}/spark-submit
+%{bin}/spark-*
+
 
 %files -n spark-python
 %defattr(-,root,root,755)
@@ -222,16 +225,17 @@ done
 
 %files -n spark-datanucleus
 %defattr(-,root,root,755)
-%{lib_spark}/lib/datanucleus-*.jar
+%{lib_spark}/jars/datanucleus-*.jar
 %{lib_spark}/yarn/lib/datanucleus-*.jar
 
-%files -n spark-extras
+%files -n spark-external
 %defattr(-,root,root,755)
-%{lib_spark}/extras
+%{lib_spark}/external
 
-%files -n spark-yarn-shuffle
+%files -n spark-network-shuffle
 %defattr(-,root,root,755)
-%{lib_spark}/lib/spark-*-yarn-shuffle.jar
+%{lib_spark}/spark-network-shuffle*.jar
+%{lib_spark}/yarn/spark-*-yarn-shuffle.jar
 %{lib_spark}/yarn/lib/spark-yarn-shuffle.jar
 
 %define service_macro() \

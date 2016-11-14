@@ -25,8 +25,7 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Dyarn.version=$HADOOP_VERSION \
             -Dprotobuf.version=2.5.0 \
             -DrecompileMode=all \
-            -Pbigtop-dist \
-            -Pyarn -Phadoop-2.6 \
+            -Pyarn -Phadoop-2.7 \
             -Phive -Phive-thriftserver \
             $SPARK_BUILD_OPTS"
 
@@ -34,10 +33,7 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
 #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html
 export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
 
-mvn $BUILD_OPTS -DskipTests install
+./dev/make-distribution.sh $BUILD_OPTS -DskipTests
 
-# Tests must be run after Spark has already been packaged.
-# See http://spark.apache.org/docs/latest/building-spark.html#spark-tests-in-maven
-if [ "$SPARK_RUN_TESTS" = "true" ]; then
-    mvn $BUILD_OPTS test
-fi
+
+mvn $BUILD_OPTS install -DskipTests=$SPARK_SKIP_TESTS

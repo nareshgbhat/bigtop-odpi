@@ -17,46 +17,46 @@ class spark {
 
   class deploy ($roles) {
     if ('spark-client' in $roles) {
-      include client
+      include spark::client
     }
 
     if ('spark-on-yarn' in $roles) {
-      include yarn
+      include spark::yarn
     }
 
     if ('spark-yarn-slave' in $roles) {
-      include yarn_slave
+      include spark::yarn_slave
     }
 
     if ('spark-master' in $roles) {
-      include master
+      include spark::master
     }
 
     if ('spark-worker' in $roles) {
-      include worker
+      include spark::worker
     }
 
     if ('spark-history-server' in $roles) {
-      include history_server
+      include spark::history_server
     }
   }
 
   class client {
-    include common
+    include spark::common
 
     package { 'spark-python':
       ensure  => latest,
       require => Package['spark-core'],
     }
 
-    package { 'spark-extras':
+    package { 'spark-external':
       ensure  => latest,
       require => Package['spark-core'],
     }
   }
 
   class master {
-    include common   
+    include spark::common
 
     package { "spark-master":
       ensure => latest,
@@ -75,7 +75,7 @@ class spark {
   }
 
   class worker {
-    include common
+    include spark::common
 
     package { "spark-worker":
       ensure => latest,
@@ -94,7 +94,7 @@ class spark {
   }
 
   class history_server {
-    include common
+    include spark::common
 
     package { 'spark-history-server':
       ensure => latest,
@@ -113,13 +113,13 @@ class spark {
   }
 
   class yarn {
-    include common
-    include datanucleus
+    include spark::common
+    include spark::datanucleus
   }
 
   class yarn_slave {
-    include yarn_shuffle
-    include datanucleus
+    include spark::yarn_shuffle
+    include spark::datanucleus
   }
 
   class yarn_shuffle {
@@ -143,6 +143,8 @@ class spark {
       $worker_ui_port = 8081,
       $history_ui_port = 18080,
       $use_yarn_shuffle_service = false,
+      $event_log_dir =  "hdfs:///var/log/spark/apps",
+      $history_log_dir = "hdfs:///var/log/spark/apps",
   ) {
 
     package { 'spark-core':
