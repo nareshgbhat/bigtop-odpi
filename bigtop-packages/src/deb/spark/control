@@ -68,7 +68,7 @@ Description: DataNucleus libraries for Apache Spark
 
 Package: spark-external
 Architecture: all
-Description: Description: External libraries for Apache Spark
+Description: External libraries for Apache Spark
  External libraries built for Apache Spark but not included in the main distribution (e.g., external streaming libraries)
 
 

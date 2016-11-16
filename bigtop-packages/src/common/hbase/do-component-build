@@ -29,10 +29,8 @@ bash -x ./dev-support/generate-hadoopX-poms.sh $HBASE_VERSION $HBASE_VERSION-had
 mvn -DskipTests -Dslf4j.version=1.6.1         \
     -Dhadoop-two.version=$HADOOP_VERSION      \
     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
+    -Dcheckstyle.skip=true                    \
     clean install -f pom.xml.hadoop2 "$@" &&  \
-mvn -DskipTests -Dslf4j.version=1.6.1         \
-    -Dhadoop-two.version=$HADOOP_VERSION      \
-    -Dzookeeper.version=$ZOOKEEPER_VERSION    \
     install site assembly:single -f pom.xml.hadoop2 "$@"
 rm -rf build
 mkdir build

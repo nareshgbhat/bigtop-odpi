@@ -24,7 +24,6 @@ if [ $HOSTTYPE != "powerpc64le" ] ; then
     autoreconf
 fi
 
-  autoreconf
 
   ./configure --prefix=/usr
   make
