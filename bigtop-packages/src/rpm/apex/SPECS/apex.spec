@@ -73,4 +73,5 @@ sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --doc-dir=$RPM_BUILD_ROOT/%{doc_apex}
 %doc %{doc_apex}
 %{lib_apex}
 %{bin_apex}/apex
+%{bin_apex}/dtcli
 %{man_dir}/man1/apex.1.*

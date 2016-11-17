@@ -1,0 +1,11 @@
+diff -urN tez-0.6.0.orig/tez-ui/src/main/webapp/package.json tez-0.6.0/tez-ui/src/main/webapp/package.json
+--- tez-0.6.0.orig/tez-ui/src/main/webapp/package.json	2015-11-25 09:37:55.460000000 +0000
++++ tez-0.6.0/tez-ui/src/main/webapp/package.json	2015-11-25 09:39:51.030000000 +0000
+@@ -22,7 +22,6 @@
+     "grunt-contrib-watch": "~0.5.2",
+     "grunt-rev": "~0.1.0",
+     "grunt-usemin": "~0.1.12",
+-    "grunt-mocha": "~0.4.1",
+     "grunt-open": "~0.2.0",
+     "grunt-svgmin": "~0.2.0",
+     "grunt-concurrent": "~0.3.0",

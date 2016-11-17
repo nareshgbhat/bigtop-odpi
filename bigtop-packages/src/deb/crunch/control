@@ -23,15 +23,15 @@ Homepage: http://crunch.apache.org/
 
 Package: crunch
 Architecture: all
-Depends: hadoop-client, bigtop-utils (>= 0.7), hbase
+#Depends: hadoop-client, bigtop-utils (>= 0.7), hbase
 Description: Simple and Efficient MapReduce Pipelines.
  Apache Crunch is a Java library for writing, testing, and running
  MapReduce pipelines, based on Google's FlumeJava. Its goal is to make 
  pipelines that are composed of many user-defined functions simple to write, 
  easy to test, and efficient to run.
 
-Package: crunch-doc
-Architecture: all
-Description: Apache Crunch documentation
- Apache Crunch documentation
+#Package: crunch-doc
+#Architecture: all
+#Description: Apache Crunch documentation
+# Apache Crunch documentation
 
