@@ -25,8 +25,8 @@ if [ $HOSTTYPE = "powerpc64le" ] || [ $HOSTTYPE = "aarch64" ] ; then
         	git clone https://github.com/ibmsoe/leveldbjni.git
 	else
 		# download leveldbjni 1.8 from original repo
-		git clone https://github.com/chirino/leveldb.git
-		git clone https://github.com/fusesource/leveldbjni.git --branch leveldbjni-1.8 --single-branch
+		git clone https://github.com/google/leveldb
+		git clone git://github.com/fusesource/leveldbjni.git --branch leveldbjni-1.8 --single-branch
 	fi
 	export SNAPPY_HOME=/usr/lib
         export LEVELDB_HOME=`cd leveldb; pwd`
@@ -35,9 +35,9 @@ if [ $HOSTTYPE = "powerpc64le" ] || [ $HOSTTYPE = "aarch64" ] ; then
         cd ${LEVELDB_HOME}
         export C_INCLUDE_PATH=${LIBRARY_PATH}
         export CPLUS_INCLUDE_PATH=${LIBRARY_PATH}
-	if [ $HOSTTYPE = "aarch64" ] ; then
-	# apply ARM64 specific patch
-	patch -p1 -E << 'EOF'
+#	if [ $HOSTTYPE = "aarch64" ] ; then
+#	# apply ARM64 specific patch
+#	patch -p1 -E << 'EOF'
         git apply ../leveldbjni/leveldb.patch
         make libleveldb.a
         #Now use maven to build and update the local maven repository with ppc version of
