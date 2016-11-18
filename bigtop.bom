@@ -37,8 +37,8 @@
  bigtop { // *the name should be change: the parsing code depends on it*
    version = "STACK-VERSION" // *required*
    stack { // *required* Fundamental properties of the Stack: JDK, SDK, GDK, etc
-     'jdk' { version = '1.7'; version_base = version }
-     'scala' { version = '2.10.4'; version_base = version }
+     'jdk' { version = '1.8'; version_base = version }
+     'scala' { version = '2.11.1'; version_base = version }
    }
    apache { // *required* These shoudn't be modified unless ASF Infra demands changes
      APACHE_MIRROR = "http://apache.osuosl.org"
@@ -69,7 +69,7 @@ bigtop {
 /** Base Configuration of the mirror and archives */
   version = "1.2.0"
   stack {
-    'jdk' { version = '1.7'; version_base = version }
+    'jdk' { version = '1.8'; version_base = version }
     'scala' { version = '2.11.1'; version_base = version }
   }
   apache {
@@ -89,7 +89,7 @@ bigtop {
   dependencies = [
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
-      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
+      'oozie', 'mahout', 'flume', 'solr', 'spark',
       'phoenix', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin',
       'tajo', 'apex'
     ],
@@ -327,7 +327,7 @@ bigtop {
       version { base = bigtop.version; pkg = base-"-SNAPSHOT"; release = 1 }
       tarball { destination = "bigtop-utils-${version.base}.tar.gz" }
     }
-    'bigtop-jsvc' {
+   'bigtop-jsvc' {
       name    = "bigtop-jsvc"
       relNotes = "Apache Common Daemon (jsvc) service package"
       version { base = '1.0.15'; pkg = base; release = 1 }
@@ -337,6 +337,16 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+    'bigtop-tomcat' {
+      name    = "bigtop-tomcat"
+      relNotes = "Apache Tomcat"
+      version { base = '6.0.48'; pkg = base; release = 1 }
+      tarball { source      = "apache-tomcat-${version.base}-src.tar.gz"
+                destination = "apache-tomcat-${version.base}.tar.gz" }
+      url     { download_path = "/tomcat/tomcat-6/v${version.base}/src"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    } 
     'kafka' {
       name    = 'kafka'
       relNotes = 'Apache Kafka'
