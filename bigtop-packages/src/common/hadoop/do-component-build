@@ -26,7 +26,7 @@ if [ $HOSTTYPE = "powerpc64le" ] || [ $HOSTTYPE = "aarch64" ] ; then
 	else
 		# download leveldbjni 1.8 from original repo
 		git clone https://github.com/google/leveldb
-		git clone git://github.com/fusesource/leveldbjni.git --branch leveldbjni-1.8 --single-branch
+		git clone git://github.com/fusesource/leveldbjni.git 
 	fi
 	export SNAPPY_HOME=/usr/lib
         export LEVELDB_HOME=`cd leveldb; pwd`
@@ -39,11 +39,17 @@ if [ $HOSTTYPE = "powerpc64le" ] || [ $HOSTTYPE = "aarch64" ] ; then
 #	# apply ARM64 specific patch
 #	patch -p1 -E << 'EOF'
         git apply ../leveldbjni/leveldb.patch
-        make libleveldb.a
+        make
         #Now use maven to build and update the local maven repository with ppc version of
         #leveldbjni.
         cd ${LEVELDBJNI_HOME}
-        mvn clean install -DskipTests -P download -Plinux64,all
+        echo "ganesh-------------------------------------"
+	echo ${platform} 
+	if [ $HOSTTYPE = "aarch64" ] ; then
+		mvn clean install -DskipTests -P download -P aarch64-linux -fn
+	else 
+		mvn clean install -DskipTests -P download -P linux64,all
+	fi
         cd ..
         #cleanup
         rm -rf ${LEVELDBJNI_HOME}
