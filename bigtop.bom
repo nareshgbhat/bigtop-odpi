@@ -38,7 +38,7 @@
    version = "STACK-VERSION" // *required*
    stack { // *required* Fundamental properties of the Stack: JDK, SDK, GDK, etc
      'jdk' { version = '1.8'; version_base = version }
-     'scala' { version = '2.11.1'; version_base = version }
+     'scala' { version = '2.11.8'; version_base = version }
    }
    apache { // *required* These shoudn't be modified unless ASF Infra demands changes
      APACHE_MIRROR = "http://apache.osuosl.org"
@@ -70,7 +70,7 @@ bigtop {
   version = "1.2.0"
   stack {
     'jdk' { version = '1.8'; version_base = version }
-    'scala' { version = '2.11.1'; version_base = version }
+    'scala' { version = '2.11.8'; version_base = version }
   }
   apache {
     APACHE_MIRROR = "https://www-us.apache.org"
