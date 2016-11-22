@@ -125,14 +125,33 @@ install -d -m 0755 $PREFIX/var/log/spark/
 install -d -m 0755 $PREFIX/var/run/spark/
 install -d -m 0755 $PREFIX/var/run/spark/work/
 
+tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR/jars -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz \*.jar
+tar --wildcards -C $PREFIX/$LIB_DIR/ -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz bin\*
+tar --wildcards -C $PREFIX/$LIB_DIR/ -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz sbin\*
 
 
 rm $DIST_DIR/bin/*.cmd
 cp -r $DIST_DIR/* $PREFIX/$LIB_DIR
 
+ls ${BUILD_DIR}/external/*/target/*${SPARK_VERSION}.jar | grep -v 'original-\|assembly' | xargs -IJARS cp JARS $PREFIX/$LIB_DIR/extras/lib
+
 # Examples jar
+cp ${BUILD_DIR}/examples/target/scala-*/jars/*.jar $PREFIX/$LIB_DIR/examples/jars/
+
+cp ${BUILD_DIR}/common/*/target/spark-*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/jars/
+cp ${BUILD_DIR}/sql/*/target/spark-*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/jars/
+cp ${BUILD_DIR}/{core,graphx,launcher,mllib,mllib-local,streaming,repl,yarn}/target/spark-*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/jars/
+cp ${BUILD_DIR}/common/network-yarn/target/scala-*/spark-${SPARK_VERSION}-yarn-shuffle.jar $PREFIX/$LIB_DIR/yarn
+cp ${BUILD_DIR}/assembly/target/scala-*/jars/avro-*.jar $PREFIX/$LIB_DIR/jars/
+
+
 cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/lib/spark-examples-${SPARK_VERSION}-hadoop${HADOOP_VERSION}.jar
 ln -s $LIB_DIR/examples $PREFIX/$DOC_DIR/
+
+# Spark license files
+cp ${BUILD_DIR}/licenses/* $PREFIX/$LIB_DIR/licenses/
+
+
 # Examples src
 cp -ra ${BUILD_DIR}/examples/src $PREFIX/$EXAMPLES_DIR/
 ln -s $EXAMPLES_DIR $PREFIX/$LIB_DIR/examples
@@ -197,13 +216,9 @@ chmod 755 $PREFIX/$BIN_DIR/spark-example
 touch $PREFIX/$LIB_DIR/RELEASE
 cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 
-(cd $PREFIX/$LIB_DIR/examples/jars; ln -s spark-examples*.jar spark-examples.jar)
- pushd $PREFIX/$LIB_DIR/yarn/lib
- 
-+ln -s ../spark-*-yarn-shuffle.jar spark-yarn-shuffle.jar
-+ln -s ../../jars/datanucleus-api-jdo*.jar datanucleus-api-jdo.jar
-+ln -s ../../jars/datanucleus-core*.jar datanucleus-core.jar
-+ln -s ../../jars/datanucleus-rdbms*.jar datanucleus-rdbms.jar
+# Version-less symlinks
+pushd $PREFIX/$LIB_DIR/yarn
+ln -s ./spark-*yarn-shuffle*.jar spark-yarn-shuffle.jar 
 popd
 pushd $PREFIX/$LIB_DIR/external/lib
 for j in $(ls *.jar); do

@@ -37,8 +37,8 @@
  bigtop { // *the name should be change: the parsing code depends on it*
    version = "STACK-VERSION" // *required*
    stack { // *required* Fundamental properties of the Stack: JDK, SDK, GDK, etc
-     'jdk' { version = '1.7'; version_base = version }
-     'scala' { version = '2.10.4'; version_base = version }
+     'jdk' { version = '1.8'; version_base = version }
+     'scala' { version = '2.11.8'; version_base = version }
    }
    apache { // *required* These shoudn't be modified unless ASF Infra demands changes
      APACHE_MIRROR = "http://apache.osuosl.org"
@@ -69,8 +69,8 @@ bigtop {
 /** Base Configuration of the mirror and archives */
   version = "1.0-SNAPSHOT"
   stack {
-    'jdk' { version = '1.7'; version_base = version }
-    'scala' { version = '2.10.4'; version_base = version }
+    'jdk' { version = '1.8'; version_base = version }
+    'scala' { version = '2.11.8'; version_base = version }
   }
   apache {
     APACHE_MIRROR = "http://apache.osuosl.org"
