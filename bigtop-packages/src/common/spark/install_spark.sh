@@ -24,13 +24,13 @@ usage: $0 <options>
      --build-dir=DIR             path to dist.dir
      --source-dir=DIR            path to package shared files dir
      --prefix=PREFIX             path to install into
-
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/spark]
      --lib-dir=DIR               path to install Spark home [/usr/lib/spark]
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
+     --pyspark-python            executable to use for Python interpreter [python]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -46,7 +46,7 @@ OPTS=$(getopt \
   -l 'bin-dir:' \
   -l 'source-dir:' \
   -l 'examples-dir:' \
-
+  -l 'pyspark-python:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -80,6 +80,9 @@ while true ; do
         --examples-dir)
         EXAMPLES_DIR=$2 ; shift 2
         ;;
+        --pyspark-python)
+        PYSPARK_PYTHON=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -102,7 +105,6 @@ if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
   . $SOURCE_DIR/bigtop.bom
 fi
 
-DIST_DIR=${BUILD_DIR}/dist
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/spark}
 LIB_DIR=${LIB_DIR:-/usr/lib/spark}
@@ -113,12 +115,18 @@ CONF_DIR=${CONF_DIR:-/etc/spark/conf.dist}
 PYSPARK_PYTHON=${PYSPARK_PYTHON:-python}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
-install -d -m 0755 $PREFIX/$LIB_DIR/external/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/conf
+install -d -m 0755 $PREFIX/$LIB_DIR/jars
+install -d -m 0755 $PREFIX/$LIB_DIR/bin
+install -d -m 0755 $PREFIX/$LIB_DIR/sbin
+install -d -m 0755 $PREFIX/$LIB_DIR/extras
+install -d -m 0755 $PREFIX/$LIB_DIR/extras/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/yarn
-install -d -m 0755 $PREFIX/$LIB_DIR/yarn/lib
-install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$EXAMPLES_DIR
+install -d -m 0755 $PREFIX/$LIB_DIR/examples/jars
+install -d -m 0755 $PREFIX/$LIB_DIR/examples/src
+install -d -m 0755 $PREFIX/$LIB_DIR/licenses
 
 install -d -m 0755 $PREFIX/var/lib/spark/
 install -d -m 0755 $PREFIX/var/log/spark/
@@ -129,10 +137,7 @@ tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR/jars -zxf ${BUILD_DIR}/
 tar --wildcards -C $PREFIX/$LIB_DIR/ -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz bin\*
 tar --wildcards -C $PREFIX/$LIB_DIR/ -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz sbin\*
 
-
-rm $DIST_DIR/bin/*.cmd
-cp -r $DIST_DIR/* $PREFIX/$LIB_DIR
-
+# External/extra jars
 ls ${BUILD_DIR}/external/*/target/*${SPARK_VERSION}.jar | grep -v 'original-\|assembly' | xargs -IJARS cp JARS $PREFIX/$LIB_DIR/extras/lib
 
 # Examples jar
@@ -144,85 +149,59 @@ cp ${BUILD_DIR}/{core,graphx,launcher,mllib,mllib-local,streaming,repl,yarn}/tar
 cp ${BUILD_DIR}/common/network-yarn/target/scala-*/spark-${SPARK_VERSION}-yarn-shuffle.jar $PREFIX/$LIB_DIR/yarn
 cp ${BUILD_DIR}/assembly/target/scala-*/jars/avro-*.jar $PREFIX/$LIB_DIR/jars/
 
-
-cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/lib/spark-examples-${SPARK_VERSION}-hadoop${HADOOP_VERSION}.jar
-ln -s $LIB_DIR/examples $PREFIX/$DOC_DIR/
-
 # Spark license files
 cp ${BUILD_DIR}/licenses/* $PREFIX/$LIB_DIR/licenses/
 
-
 # Examples src
-cp -ra ${BUILD_DIR}/examples/src $PREFIX/$EXAMPLES_DIR/
-ln -s $EXAMPLES_DIR $PREFIX/$LIB_DIR/examples
+cp -ra ${BUILD_DIR}/examples/src $PREFIX/$LIB_DIR/examples
 
-# External libraries not included in dist
-find_external_modules() {
-  # If corresponding assembly sub-module exists, copy the assembly jar instead of the non-assembly jar
-  find ${BUILD_DIR}/external -mindepth 1 -maxdepth 1 -not -name '*-assembly' \
-      -exec sh -c '([ -d "$1/target" ] && echo "$1") || ([ -d "$0/target" ] && echo "$0")' {} {}-assembly \;
-}
-copy_external_jars() {
-  xargs -L1 -r -IMODULE find MODULE/target -name "*${SPARK_VERSION}.jar" -and -not -name "original-*" \
-      -exec cp {} $PREFIX/$LIB_DIR/external/lib \;
-}
-find_external_modules | copy_external_jars
+# Data
+cp -ra ${BUILD_DIR}/data $PREFIX/$LIB_DIR/
 
-# Move the configuration files to the correct location
-mv $PREFIX/$LIB_DIR/conf/* $PREFIX/$CONF_DIR
+chmod 755 $PREFIX/$LIB_DIR/bin/*
+chmod 755 $PREFIX/$LIB_DIR/sbin/*
+
+# Copy in the configuration files
+install -d -m 0755 $PREFIX/$CONF_DIR
+cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
+cp -a ${BUILD_DIR}/conf/* $PREFIX/$LIB_DIR/conf
 cp $SOURCE_DIR/spark-env.sh $PREFIX/$CONF_DIR
-rmdir $PREFIX/$LIB_DIR/conf
-ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
 for wrap in bin/spark-class bin/spark-shell bin/spark-sql bin/spark-submit; do
-  cat > $PREFIX/$BIN_DIR/$(basename $wrap) <<EOF
+  cat > $PREFIX/$BIN_DIR/`basename $wrap` <<EOF
 #!/bin/bash
-
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
-
 exec $INSTALLED_LIB_DIR/$wrap "\$@"
 EOF
-  chmod 755 $PREFIX/$BIN_DIR/$(basename $wrap)
+  chmod 755 $PREFIX/$BIN_DIR/`basename $wrap`
 done
 
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
 
+cp -r ${BUILD_DIR}/python ${PREFIX}/${INSTALLED_LIB_DIR}/
 rm -f ${PREFIX}/${INSTALLED_LIB_DIR}/python/.gitignore
 cat > $PREFIX/$BIN_DIR/pyspark <<EOF
 #!/bin/bash
-
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
-
 export PYSPARK_PYTHON=${PYSPARK_PYTHON}
-
 exec $INSTALLED_LIB_DIR/bin/pyspark "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/pyspark
-
-cat > $PREFIX/$BIN_DIR/spark-example <<EOF
-#!/bin/bash
-
-# Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
-
-exec $INSTALLED_LIB_DIR/bin/run-example "\$@"
-EOF
-chmod 755 $PREFIX/$BIN_DIR/spark-example
 
 touch $PREFIX/$LIB_DIR/RELEASE
 cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 
 # Version-less symlinks
 pushd $PREFIX/$LIB_DIR/yarn
-ln -s ./spark-*yarn-shuffle*.jar spark-yarn-shuffle.jar 
+ln -s ./spark-*yarn-shuffle*.jar spark-yarn-shuffle.jar
 popd
-pushd $PREFIX/$LIB_DIR/external/lib
+pushd $PREFIX/$LIB_DIR/extras/lib
 for j in $(ls *.jar); do
-  ln -s $j $(echo $j | sed -n 's/\(.*\)\(_.\+\)\(.jar\)/\1\3/p')
+  ln -s $j $(echo $j | sed -n 's/\(.*\)\(_[0-9.]\+-[0-9.]\+\)\(.jar\)/\1\3/p')
 done
 popd
-cp /bla/bla /bla
+
