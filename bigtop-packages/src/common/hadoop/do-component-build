@@ -43,7 +43,7 @@ if [ $HOSTTYPE = "powerpc64le" ] || [ $HOSTTYPE = "aarch64" ] ; then
 #	if [ $HOSTTYPE = "aarch64" ] ; then
 #	 apply ARM64 specific patch
 #	patch -p1 -E << 'EOF'
-        git apply ../leveldbjni/leveldb.patch
+#        git apply ../leveldbjni/leveldb.patch
         make
         #Now use maven to build and update the local maven repository with ppc version of
         #leveldbjni.
