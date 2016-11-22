@@ -27,7 +27,6 @@ if [ $HOSTTYPE = "powerpc64le" ] || [ $HOSTTYPE = "aarch64" ] ; then
 		# download leveldbjni 1.8 from original repo
 	 	git clone https://github.com/google/leveldb.git
 		git clone git://github.com/fusesource/leveldbjni.git --branch leveldbjni-1.8 --single-branch
-	fi	
 	else
 		# download leveldbjni 1.8 from original repo
 		git clone https://github.com/chirino/leveldb.git
