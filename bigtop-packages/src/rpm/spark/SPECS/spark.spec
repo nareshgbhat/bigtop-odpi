@@ -197,8 +197,11 @@ done
 %{lib_spark}/README
 %{lib_spark}/NOTICE
 %{lib_spark}/bin
+%{lib_spark}/lib
 %{lib_spark}/spark*.jar
 %{lib_spark}/jars
+%exclude %{lib_spark}/jars/datanucleus-*.jar
+%exclude %{lib_spark}/spark-network-shuffle*.jar
 %{lib_spark}/sbin
 %{lib_spark}/data
 %{lib_spark}/examples
