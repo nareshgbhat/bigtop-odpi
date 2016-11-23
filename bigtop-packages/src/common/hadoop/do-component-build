@@ -43,7 +43,6 @@ if [ $HOSTTYPE = "powerpc64le" ] || [ $HOSTTYPE = "aarch64" ] ; then
         #Now use maven to build and update the local maven repository with ppc version of
         #leveldbjni.
         cd ${LEVELDBJNI_HOME}
-        echo "ganesh-------------------------------------"
 	echo ${platform} 
 	if [ $HOSTTYPE = "aarch64" ] ; then
 		mvn clean install -DskipTests -P download -P aarch64-linux -fn
