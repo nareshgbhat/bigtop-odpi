@@ -420,7 +420,6 @@
           <xincludeSupported>true</xincludeSupported>
           <useIdAsFilename>true</useIdAsFilename>
         </configuration>
-	<additionalparam>-Xdoclint:none</additionalparam>
         <executions>
           <execution>
             <id>multipage</id>
