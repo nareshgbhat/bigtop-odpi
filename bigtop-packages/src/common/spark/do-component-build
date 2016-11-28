@@ -37,4 +37,7 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:
 #Patch Spark-2.0 with Debian package creation support.
 patch -p1 < debian/0001-branch-2.0-Add-deb-profile-to-assembly-pom.xml.patch
 
+#BIGTOP-2607
+sed -i -e /useZincServer/d -e /recompileMode/d pom.xml
+
 mvn $BUILD_OPTS -DskipTests package -Pdeb
