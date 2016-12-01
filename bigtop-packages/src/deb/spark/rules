@@ -26,6 +26,7 @@ export DH_OPTIONS
 	dh $@
 
 override_dh_auto_build:
+	patch -p1 < ./debian/0001-branch-2.0-Add-deb-profile-to-assembly-pom.xml.patch
 	bash debian/do-component-build
 
 svcs=spark-master spark-worker spark-history-server spark-thriftserver
