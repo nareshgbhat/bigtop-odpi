@@ -35,20 +35,51 @@ if [ $HOSTTYPE = "powerpc64le" ] || [ $HOSTTYPE = "aarch64" ] ; then
         cd ${LEVELDB_HOME}
         export C_INCLUDE_PATH=${LIBRARY_PATH}
         export CPLUS_INCLUDE_PATH=${LIBRARY_PATH}
-#	if [ $HOSTTYPE = "aarch64" ] ; then
-#	# apply ARM64 specific patch
-#	patch -p1 -E << 'EOF'
+        if [ $HOSTTYPE = "aarch64" ] ; then
+            # apply ARM64 specific patch
+            patch -p1 -E << 'EOF'
+diff a/port/atomic_pointer.h b/port/atomic_pointer.h
+--- a/port/atomic_pointer.h
++++ b/port/atomic_pointer.h
+@@ -36,6 +36,8 @@
+ #define ARCH_CPU_X86_FAMILY 1
+ #elif defined(__ARMEL__)
+ #define ARCH_CPU_ARM_FAMILY 1
++#elif defined(__aarch64__)
++#define ARCH_CPU_ARM64_FAMILY 1
+ #elif defined(__ppc__) || defined(__powerpc__) || defined(__powerpc64__)
+ #define ARCH_CPU_PPC_FAMILY 1
+ #endif
+@@ -93,6 +95,13 @@ inline void MemoryBarrier() {
+ }
+ #define LEVELDB_HAVE_MEMORY_BARRIER
+
++// ARM64
++#elif defined(ARCH_CPU_ARM64_FAMILY) && defined(__linux__)
++inline void MemoryBarrier() {
++  asm volatile("dmb sy" : : : "memory");
++}
++#define LEVELDB_HAVE_MEMORY_BARRIER
++
+ // PPC
+ #elif defined(ARCH_CPU_PPC_FAMILY) && defined(__GNUC__)
+ inline void MemoryBarrier() {
+@@ -216,6 +225,7 @@ class AtomicPointer {
+ #undef LEVELDB_HAVE_MEMORY_BARRIER
+ #undef ARCH_CPU_X86_FAMILY
+ #undef ARCH_CPU_ARM_FAMILY
++#undef ARCH_CPU_ARM64_FAMILY
+ #undef ARCH_CPU_PPC_FAMILY
+
+ }  // namespace port
+EOF
+        fi
         git apply ../leveldbjni/leveldb.patch
-        make
+        make libleveldb.a
         #Now use maven to build and update the local maven repository with ppc version of
         #leveldbjni.
         cd ${LEVELDBJNI_HOME}
-	echo ${platform} 
-	if [ $HOSTTYPE = "aarch64" ] ; then
-		mvn clean install -DskipTests -P download -P aarch64-linux -fn
-	else 
-		mvn clean install -DskipTests -P download -P linux64,all
-	fi
+        mvn clean install -DskipTests -P download -Plinux64,all
         cd ..
         #cleanup
         rm -rf ${LEVELDBJNI_HOME}
@@ -83,8 +114,8 @@ repo_id="ODP"
 MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION -DdistMgmtStagingId=${repo_id} -DdistMgmtStagingUrl=${nexus_repo_url}"
 MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
 
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" install "$@"
-mvn site site:stage ${MAVEN_OPTS} $@
+#mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" install "$@"
+#mvn site site:stage ${MAVEN_OPTS} $@
 
 
 # Defining Install and Deploy OPTS for hadoop
@@ -94,7 +125,7 @@ HADOOP_DEPLOY_OPTS="${MAVEN_OPTS} deploy"
 # Based on Environment Flag, setting the right HADOOP_OPTS with install/deploy.
 [[ $deployarg = "yes" ]] && HADOOP_OPTS="${HADOOP_DEPLOY_OPTS}" || HADOOP_OPTS="${HADOOP_INSTALL_OPTS}"
 
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${HADOOP_OPTS} "$@"
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" ${HADOOP_OPTS} "$@"
 mvn site site:stage ${HADOOP_OPTS} $@
 
 
