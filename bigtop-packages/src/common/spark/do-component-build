@@ -37,4 +37,11 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:
 #BIGTOP-2607
 sed -i -e /useZincServer/d -e /recompileMode/d pom.xml
 
-mvn $BUILD_OPTS -DskipTests package -Pdeb
+mvn $BUILD_OPTS -DskipTests install
+
+# Tests must be run after Spark has already been packaged.
+# See http://spark.apache.org/docs/latest/building-spark.html#spark-tests-in-maven
+if [ "$SPARK_RUN_TESTS" = "true" ]; then
+    mvn $BUILD_OPTS test
+fi
+

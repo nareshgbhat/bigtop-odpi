@@ -191,23 +191,20 @@ done
 %defattr(-,root,root,755)
 %config(noreplace) %{config_spark}.dist
 %doc %{doc_spark}
-%{lib_spark}/conf
 %{lib_spark}/LICENSE
-%{lib_spark}/RELEASE
-%{lib_spark}/README
 %{lib_spark}/NOTICE
-%{lib_spark}/bin
-%{lib_spark}/spark*.jar
-%{lib_spark}/jars
-%{lib_spark}/sbin
-%{lib_spark}/data
-%{lib_spark}/examples
-%{lib_spark}/licenses
-%{lib_spark}/work
-%{lib_spark}/ui-resources
+%{lib_spark}/README.md
+%{lib_spark}/RELEASE
 %{bin_spark}
 %exclude %{bin_spark}/pyspark
-%exclude %{lib_spark}/python
+%{lib_spark}/conf
+%{lib_spark}/data
+%{lib_spark}/examples
+%{lib_spark}/jars
+%exclude %{lib_spark}/jars/datanucleus-*.jar
+%{lib_spark}/licenses
+%{lib_spark}/sbin
+%{lib_spark}/work
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
@@ -232,6 +229,7 @@ done
 
 %files -n spark-yarn-shuffle
 %defattr(-,root,root,755)
+%{lib_spark}/yarn/spark-*-yarn-shuffle.jar
 %{lib_spark}/yarn/lib/spark-yarn-shuffle.jar
 
 %define service_macro() \
