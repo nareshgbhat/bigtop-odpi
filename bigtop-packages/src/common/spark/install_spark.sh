@@ -36,6 +36,7 @@ usage: $0 <options>
   exit 1
 }
 
+
 OPTS=$(getopt \
   -n $0 \
   -o '' \
@@ -148,6 +149,7 @@ cp ${BUILD_DIR}/sql/*/target/spark-*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/jars/
 cp ${BUILD_DIR}/{core,graphx,launcher,mllib,mllib-local,streaming,repl,yarn}/target/spark-*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/jars/
 cp ${BUILD_DIR}/common/network-yarn/target/scala-*/spark-${SPARK_VERSION}-yarn-shuffle.jar $PREFIX/$LIB_DIR/yarn
 cp ${BUILD_DIR}/assembly/target/scala-*/jars/avro-*.jar $PREFIX/$LIB_DIR/jars/
+cp ${BUILD_DIR}/assembly/target/scala-*/jars/datanucleus-*.jar $PREFIX/$LIB_DIR/jars/
 
 # Spark license files
 cp ${BUILD_DIR}/licenses/* $PREFIX/$LIB_DIR/licenses/
@@ -198,6 +200,9 @@ cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 # Version-less symlinks
 pushd $PREFIX/$LIB_DIR/yarn
 ln -s ./spark-*yarn-shuffle*.jar spark-yarn-shuffle.jar
+ln -s ../../jars/datanucleus-api-jdo*.jar datanucleus-api-jdo.jar
+ln -s ../../jars/datanucleus-core*.jar datanucleus-core.jar
+ln -s ../../jars/datanucleus-rdbms*.jar datanucleus-rdbms.jar
 popd
 pushd $PREFIX/$LIB_DIR/extras/lib
 for j in $(ls *.jar); do

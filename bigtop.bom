@@ -89,7 +89,7 @@ bigtop {
   dependencies = [
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
-      'oozie', 'mahout', 'flume', 'solr', 'spark',
+      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'crunch', 'spark',
       'phoenix', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin',
       'tajo', 'apex'
     ],
@@ -268,6 +268,16 @@ bigtop {
       tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
       url     { download_path = "lucene/$name/${version.base}"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+    'crunch' {
+      name    = 'crunch'
+      relNotes = 'Apache Crunch'
+      version { base = '0.13.0'; pkg = base; release = 1 }
+      tarball { destination = "apache-$name-${version.base}-src.tar.gz"
+                source      = destination }
+      url     { download_path = "/$name/$name-${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }

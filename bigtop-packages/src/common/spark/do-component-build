@@ -34,10 +34,14 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
 #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html
 export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
 
-#Patch Spark-2.0 with Debian package creation support.
-patch -p1 < $RPM_SOURCE_DIR/0001-branch-2.0-Add-deb-profile-to-assembly-pom.xml.patch
-
 #BIGTOP-2607
 sed -i -e /useZincServer/d -e /recompileMode/d pom.xml
 
-mvn $BUILD_OPTS -DskipTests package -Pdeb
+mvn $BUILD_OPTS -DskipTests install
+
+# Tests must be run after Spark has already been packaged.
+# See http://spark.apache.org/docs/latest/building-spark.html#spark-tests-in-maven
+if [ "$SPARK_RUN_TESTS" = "true" ]; then
+    mvn $BUILD_OPTS test
+fi
+

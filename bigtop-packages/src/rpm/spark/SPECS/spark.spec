@@ -126,20 +126,20 @@ Group: Development/Libraries
 %description -n spark-datanucleus
 DataNucleus libraries used by Spark SQL with Hive Support
 
-%package -n spark-external
-Summary: External libraries for Apache Spark
+%package -n spark-extras
+Summary: Extras libraries for Apache Spark
 Group: Development/Libraries
 
-%description -n spark-external
-Summary: External libraries for Apache Spark but not included in the main
-assembly JAR (e.g., external streaming libraries)
+%description -n spark-extras
+Summary: Extras libraries for Apache Spark but not included in the main
+assembly JAR (e.g., extras streaming libraries)
 
-%package -n spark-network-shuffle
-Summary: Spark Network Shuffle Service
+%package -n spark-yarn-shuffle
+Summary: Spark Yarn Shuffle Service
 Group: Development/Libraries
 
-%description -n spark-network-shuffle
-Spark Network Shuffle Service
+%description -n spark-yarn-shuffle
+Spark Yarn Shuffle Service
 
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
@@ -191,25 +191,20 @@ done
 %defattr(-,root,root,755)
 %config(noreplace) %{config_spark}.dist
 %doc %{doc_spark}
-%{lib_spark}/conf
 %{lib_spark}/LICENSE
-%{lib_spark}/RELEASE
-%{lib_spark}/README
 %{lib_spark}/NOTICE
-%{lib_spark}/bin
-%{lib_spark}/lib
-%{lib_spark}/spark*.jar
-%{lib_spark}/jars
-%exclude %{lib_spark}/jars/datanucleus-*.jar
-%exclude %{lib_spark}/spark-network-shuffle*.jar
-%{lib_spark}/sbin
-%{lib_spark}/data
-%{lib_spark}/examples
-%{lib_spark}/work
-%{lib_spark}/ui-resources
+%{lib_spark}/README.md
+%{lib_spark}/RELEASE
 %{bin_spark}
 %exclude %{bin_spark}/pyspark
-%exclude %{lib_spark}/python
+%{lib_spark}/conf
+%{lib_spark}/data
+%{lib_spark}/examples
+%{lib_spark}/jars
+%exclude %{lib_spark}/jars/datanucleus-*.jar
+%{lib_spark}/licenses
+%{lib_spark}/sbin
+%{lib_spark}/work
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
@@ -228,13 +223,12 @@ done
 %{lib_spark}/jars/datanucleus-*.jar
 %{lib_spark}/yarn/lib/datanucleus-*.jar
 
-%files -n spark-external
+%files -n spark-extras
 %defattr(-,root,root,755)
-%{lib_spark}/external
+%{lib_spark}/extras
 
-%files -n spark-network-shuffle
+%files -n spark-yarn-shuffle
 %defattr(-,root,root,755)
-%{lib_spark}/spark-network-shuffle*.jar
 %{lib_spark}/yarn/spark-*-yarn-shuffle.jar
 %{lib_spark}/yarn/lib/spark-yarn-shuffle.jar
 
