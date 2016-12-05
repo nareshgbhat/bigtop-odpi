@@ -129,7 +129,8 @@ HADOOP_DEPLOY_OPTS="${MAVEN_OPTS} deploy"
 # Based on Environment Flag, setting the right HADOOP_OPTS with install/deploy.
 [[ $deployarg = "yes" ]] && HADOOP_OPTS="${HADOOP_DEPLOY_OPTS}" || HADOOP_OPTS="${HADOOP_INSTALL_OPTS}"
 
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" ${HADOOP_OPTS} "$@"
+#mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" ${HADOOP_OPTS} "$@"
+mvn clean package -Pdist -Dtar -Dmaven.javadoc.skip=true -DskipTests -fail-at-end -Pnative -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" ${HADOOP_OPTS} "$@"
 mvn site site:stage ${HADOOP_OPTS} $@
 
 
