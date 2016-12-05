@@ -25,10 +25,14 @@ if [ $HOSTTYPE = "powerpc64le" ] || [ $HOSTTYPE = "aarch64" ] ; then
         	git clone https://github.com/ibmsoe/leveldbjni.git
 	else
 		# download leveldbjni 1.8 from original repo
-		git clone https://github.com/google/leveldb
+		git clone https://github.com/chirino/leveldb.git 
 		git clone git://github.com/fusesource/leveldbjni.git --branch leveldbjni-1.8 --single-branch
 	fi
+        if [ -f /usr/lib/libsnappy.so ]; then
 	export SNAPPY_HOME=/usr/lib
+        elif [ -f /usr/lib64/libsnappy.so ]; then
+	export SNAPPY_HOME=/usr/lib64
+        fi
         export LEVELDB_HOME=`cd leveldb; pwd`
         export LEVELDBJNI_HOME=`cd leveldbjni; pwd`
         export LIBRARY_PATH=${SNAPPY_HOME}
