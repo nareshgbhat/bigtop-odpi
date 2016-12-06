@@ -197,16 +197,8 @@ chmod 755 $PREFIX/$BIN_DIR/pyspark
 touch $PREFIX/$LIB_DIR/RELEASE
 cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 
-# Version-less symlinks
-pushd $PREFIX/$LIB_DIR/yarn
-ln -s ./spark-*yarn-shuffle*.jar spark-yarn-shuffle.jar
-ln -s ../../jars/datanucleus-api-jdo*.jar datanucleus-api-jdo.jar
-ln -s ../../jars/datanucleus-core*.jar datanucleus-core.jar
-ln -s ../../jars/datanucleus-rdbms*.jar datanucleus-rdbms.jar
-popd
 pushd $PREFIX/$LIB_DIR/extras/lib
 for j in $(ls *.jar); do
   ln -s $j $(echo $j | sed -n 's/\(.*\)\(_[0-9.]\+-[0-9.]\+\)\(.jar\)/\1\3/p')
 done
 popd
-
